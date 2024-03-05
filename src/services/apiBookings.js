@@ -107,6 +107,21 @@ export async function getStaysTodayActivity() {
   return data;
 }
 
+export async function getBookedCabinsFromDates(startDate, endDate) {
+  let { data, error } = await supabase
+    .from("bookings")
+    .select("cabinId")
+    .lt("startDate", endDate)
+    .gt("endDate", startDate);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not get loaded");
+  }
+
+  return data;
+}
+
 export async function updateBooking(id, obj) {
   const { data, error } = await supabase
     .from("bookings")
@@ -119,6 +134,21 @@ export async function updateBooking(id, obj) {
     console.error(error);
     throw new Error("Booking could not be updated");
   }
+  return data;
+}
+
+export async function createBooking(newBooking) {
+  let query = supabase.from("bookings");
+
+  query = query.insert([{ ...newBooking }]);
+
+  const { data, error } = await query.select().single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be created.");
+  }
+
   return data;
 }
 
