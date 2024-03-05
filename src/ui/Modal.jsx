@@ -14,6 +14,28 @@ const StyledModal = styled.div`
   box-shadow: var(--shadow-lg);
   padding: 3.2rem 4rem;
   transition: all 0.5s;
+
+  & > * {
+    max-height: 85dvh;
+    overflow: auto;
+    padding-right: 8px;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 8px;
+      background-color: var(--color-grey-100);
+      outline: 1px solid var(--color-grey-200);
+      border-radius: 10px;
+    }
+  }
 `;
 
 const Overlay = styled.div`
@@ -26,6 +48,9 @@ const Overlay = styled.div`
   backdrop-filter: blur(4px);
   z-index: 1000;
   transition: all 0.5s;
+  overflow: auto;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
 `;
 
 const Button = styled.button`

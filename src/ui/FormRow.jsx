@@ -31,16 +31,40 @@ const Label = styled.label`
   font-weight: 500;
 `;
 
+const InputWrapper = styled.div`
+  & > *:not(button) {
+    width: 100%;
+  }
+
+  &:has(button) {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+  }
+`;
+
+const Tip = styled.span`
+  display: block;
+  font-size: 1.1rem;
+  font-style: italic;
+  text-align: right;
+  color: var(--color-grey-500);
+  padding-top: 0.2em;
+`;
+
 const Error = styled.span`
   font-size: 1.4rem;
   color: var(--color-red-700);
 `;
 
-function FormRow({ label, error, children }) {
+function FormRow({ label, error, tip, children }) {
   return (
     <StyledFormRow>
       {label && <Label htmlFor={children.props.id}>{label}</Label>}
-      {children}
+      <InputWrapper>
+        {children}
+        {tip && <Tip>{tip}</Tip>}
+      </InputWrapper>
       {error && <Error>{error}</Error>}
     </StyledFormRow>
   );
