@@ -199,7 +199,11 @@ function CreateBookingForm({ onCloseModal }) {
         />
       </FormRow>
 
-      <FormRow label="Cabin" error={errors?.cabinId?.message}>
+      <FormRow
+        label="Cabin"
+        tip="Cabins available for selected dates"
+        error={errors?.cabinId?.message}
+      >
         <Select
           id="cabinId"
           $type="white"
@@ -221,7 +225,11 @@ function CreateBookingForm({ onCloseModal }) {
         />
       </FormRow>
 
-      <FormRow label="Number of guests" error={errors?.numGuests?.message}>
+      <FormRow
+        label="Number of guests"
+        tip="Including the main guest"
+        error={errors?.numGuests?.message}
+      >
         <Select
           id="numGuests"
           $type="white"
