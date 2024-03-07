@@ -14,7 +14,6 @@ import { useCreateBooking } from "./useCreateBooking";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useGuests } from "./useGuests";
-import { useSettings } from "../settings/useSettings";
 
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
@@ -24,17 +23,17 @@ import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
 import Spinner from "../../ui/Spinner";
 import Checkbox from "../../ui/Checkbox";
+import { WithSettings } from "../settings/WithSettings";
 
-function CreateBookingForm({ onCloseModal }) {
+function CreateBookingForm({ onCloseModal, settings }) {
   const { isLoading: isLoadingCabins, cabins } = useCabins();
   const { isLoading: isLoadingGuests, guests } = useGuests();
-  const { isLoading: isLoadingSettings, settings } = useSettings();
 
   const { isCreating, createBooking } = useCreateBooking();
   const isWorking = isCreating;
 
-  const initMinEndDate = formatAddDays(startOfToday(), 2);
-  const initMaxEndDate = formatAddDays(startOfToday(), 30);
+  const initMinEndDate = formatAddDays(startOfToday(), settings.minBookingLength);
+  const initMaxEndDate = formatAddDays(startOfToday(), settings.maxBookingLength);
 
   const [startDate, setStartDate] = useState(
     formatISO(startOfToday(), {
@@ -143,7 +142,7 @@ function CreateBookingForm({ onCloseModal }) {
     console.log(errors);
   }
 
-  if (isLoadingCabins || isLoadingGuests || isLoadingSettings)
+  if (isLoadingCabins || isLoadingGuests)
     return <Spinner />;
 
   return (
@@ -292,4 +291,14 @@ function CreateBookingForm({ onCloseModal }) {
   );
 }
 
-export default CreateBookingForm;
+function CreateBookingFormWithSettings({ onCloseModal }) {
+  return (
+    <WithSettings>
+      {(settings) => (
+        <CreateBookingForm onCloseModal={onCloseModal} settings={settings} />
+      )}
+    </WithSettings>
+  )
+}
+
+export default CreateBookingFormWithSettings;
