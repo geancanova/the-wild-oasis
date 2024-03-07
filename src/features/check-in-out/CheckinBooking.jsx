@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useMoveBack } from "../../hooks/useMoveBack";
 import { useBooking } from "../bookings/useBooking";
 import { useCheckin } from "./useCheckin";
-import { useSettings } from "../settings/useSettings";
+import { useSettings } from "../../context/SetingsContext";
 
 import Checkbox from "../../ui/Checkbox";
 import Row from "../../ui/Row";
@@ -29,14 +29,14 @@ function CheckinBooking() {
   const [addBreakfast, setAddBreakfast] = useState(false);
 
   const { booking, isLoading } = useBooking();
-  const { settings, isLoading: isLoadingSettings } = useSettings();
+  const { breakfastPrice } = useSettings();
 
   useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking]);
 
   const moveBack = useMoveBack();
   const { checkin, isCheckingIn } = useCheckin();
 
-  if (isLoading || isLoadingSettings) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   const {
     id: bookingId,
@@ -47,8 +47,7 @@ function CheckinBooking() {
     numNights,
   } = booking;
 
-  const optionalBreakfastPrice =
-    settings.breakfastPrice * numNights * numGuests;
+  const optionalBreakfastPrice = breakfastPrice * numNights * numGuests;
 
   function handleCheckin() {
     if (!confirmPaid) return;

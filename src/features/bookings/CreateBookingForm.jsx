@@ -14,7 +14,7 @@ import { useCreateBooking } from "./useCreateBooking";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useGuests } from "./useGuests";
-import { useSettings } from "../settings/useSettings";
+import { useSettings } from "../../context/SetingsContext";
 
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
@@ -28,13 +28,13 @@ import Checkbox from "../../ui/Checkbox";
 function CreateBookingForm({ onCloseModal }) {
   const { isLoading: isLoadingCabins, cabins } = useCabins();
   const { isLoading: isLoadingGuests, guests } = useGuests();
-  const { isLoading: isLoadingSettings, settings } = useSettings();
+  const { breakfastPrice, minBookingLength, maxBookingLength } = useSettings();
 
   const { isCreating, createBooking } = useCreateBooking();
   const isWorking = isCreating;
 
-  const initMinEndDate = formatAddDays(startOfToday(), 2);
-  const initMaxEndDate = formatAddDays(startOfToday(), 30);
+  const initMinEndDate = formatAddDays(startOfToday(), minBookingLength);
+  const initMaxEndDate = formatAddDays(startOfToday(), maxBookingLength);
 
   const [startDate, setStartDate] = useState(
     formatISO(startOfToday(), {
@@ -74,11 +74,11 @@ function CreateBookingForm({ onCloseModal }) {
     const date = formatDate(dateString);
     setStartDate(dateString);
 
-    const updatedMinEndDate = formatAddDays(date, settings?.minBookingLength);
+    const updatedMinEndDate = formatAddDays(date, minBookingLength);
     setMinEndDate(updatedMinEndDate);
     setEndDate(updatedMinEndDate);
 
-    const updatedMaxEndDate = formatAddDays(date, settings?.maxBookingLength);
+    const updatedMaxEndDate = formatAddDays(date, maxBookingLength);
     setMaxEndDate(updatedMaxEndDate);
   }
 
@@ -95,7 +95,6 @@ function CreateBookingForm({ onCloseModal }) {
     const selectedCabinPrice = (regularPrice - discount) * numNights;
 
     // Extras price
-    const { breakfastPrice } = settings;
     const extrasPrice = hasBreakfast
       ? breakfastPrice * data.numGuests * numNights
       : 0;
@@ -125,7 +124,7 @@ function CreateBookingForm({ onCloseModal }) {
       extrasPrice,
       totalPrice,
       hasBreakfast,
-      isPaid,
+      isPaid: isCheckedout || isPaid,
       status,
     };
 
@@ -143,8 +142,7 @@ function CreateBookingForm({ onCloseModal }) {
     console.log(errors);
   }
 
-  if (isLoadingCabins || isLoadingGuests || isLoadingSettings)
-    return <Spinner />;
+  if (isLoadingCabins || isLoadingGuests) return <Spinner />;
 
   return (
     <Form
@@ -181,7 +179,7 @@ function CreateBookingForm({ onCloseModal }) {
 
       <FormRow
         label="End date"
-        tip={`min: ${settings.minBookingLength} / max: ${settings.maxBookingLength} nights`}
+        tip={`min: ${minBookingLength} / max: ${maxBookingLength} nights`}
         error={errors?.endDate?.message}
       >
         <Input
@@ -257,7 +255,7 @@ function CreateBookingForm({ onCloseModal }) {
       <FormRow label="It's paid?" error={errors?.isPaid?.message}>
         <Checkbox
           id="isPaid"
-          checked={isCheckedout ? true : isPaid}
+          checked={isCheckedout || isPaid}
           disabled={isWorking || isCheckedout}
           onChange={() => {
             setIsPaid((val) => !val);
