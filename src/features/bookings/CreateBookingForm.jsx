@@ -119,6 +119,7 @@ function CreateBookingForm({ onCloseModal }) {
 
     const finalData = {
       ...data,
+      created_at: startOfDay(formatStartDate),
       numNights,
       cabinPrice: selectedCabinPrice,
       extrasPrice,
