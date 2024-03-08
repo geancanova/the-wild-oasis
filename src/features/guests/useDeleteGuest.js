@@ -14,7 +14,7 @@ export function useDeleteGuest() {
         queryKey: ["guests"],
       });
     },
-    onError: (err) => toast.error(err.messsage),
+    onError: (err) => toast.error(err.message),
   });
 
   return { isDeleting, deleteGuest };
