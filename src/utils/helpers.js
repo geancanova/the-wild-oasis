@@ -1,4 +1,14 @@
 import { addDays, differenceInDays, formatDistance, formatISO, parseISO } from "date-fns";
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+
+countries.registerLocale(enLocale);
+const countryObj = countries.getNames("en", { select: "official" });
+
+export const countriesArr = Object.entries(countryObj).map(([key, value]) => ({
+  value: key.toLowerCase(),
+  label: value,
+}));
 
 // We want to make this function work for both Date objects and strings (which come from Supabase)
 export const subtractDates = (dateStr1, dateStr2) =>

@@ -13,7 +13,7 @@ import { useCabins } from "../cabins/useCabins";
 import { useCreateBooking } from "./useCreateBooking";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useGuests } from "./useGuests";
+import { useGuests } from "../guests/useGuests";
 import { useSettings } from "../../context/SetingsContext";
 
 import Input from "../../ui/Input";
