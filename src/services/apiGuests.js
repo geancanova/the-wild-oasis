@@ -56,6 +56,8 @@ export async function deleteGuest(id) {
 
   if (error) {
     console.error(error);
+    if (error.code === "23503") throw new Error("The guest has bookings.");
+
     throw new Error("Guest could not be deleted.");
   }
 
